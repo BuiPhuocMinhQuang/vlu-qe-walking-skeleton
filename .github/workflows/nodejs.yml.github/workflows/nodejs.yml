@@ -1,0 +1,36 @@
+name: Node.js CI with Jest
+
+# Trigger khi push hoặc pull request vào main
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x]  # có thể đổi 16.x, 20.x nếu cần
+
+    steps:
+      # 1. Lấy code từ repo
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 2. Cài Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      # 3. Cài dependencies
+      - name: Install dependencies
+        run: npm install
+
+      # 4. Chạy test Jest
+      - name: Run tests
+        run: npm test
